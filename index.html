@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gomper · Armá tu llavero</title>
+<meta name="description" content="Armá tu llavero charm Gomper: elegí cordón, nombre y colgantes, y enviá tu pedido por WhatsApp.">
+<meta name="theme-color" content="#F7EEE3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7EEE3;
+    --card: #FFFCF7;
+    --ink: #3A2530;
+    --ink-2: #6B5560;
+    --line: #E6D8C8;
+    --accent: #C6963C;
+    --low: #A84718;
+    --low-bg: #FBE7D6;
+    --out: #7A6D73;
+    --ok: #2F6B4F;
+    --danger: #A3271F;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  button, input { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 16px 140px; }
+
+  /* Encabezado */
+  header { text-align: center; padding: 28px 0 8px; }
+  .marca { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
+  .marca svg { display: block; }
+  .wordmark { font-family: 'Fraunces', serif; font-weight: 600; font-size: 48px; line-height: 1; letter-spacing: -0.02em; margin: 6px 0 0; }
+  .tagline { font-size: 12px; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-2); margin: 10px 0 0; }
+  .intro { color: var(--ink-2); margin: 14px auto 0; max-width: 34ch; }
+
+  .demo { background: #EFE3F2; color: #4B2D57; border-radius: 12px; padding: 10px 14px; font-size: 14px; margin: 16px 0 0; }
+
+  /* Pestañas de llaveros */
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 6px; align-items: center; }
+  .tab { display: inline-flex; align-items: center; border: 1.5px solid var(--line); background: var(--card); border-radius: 999px; min-height: 44px; }
+  .tab.activo { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+  .tab-btn { border: 0; background: none; padding: 10px 16px; min-height: 44px; font-weight: 700; border-radius: 999px; }
+  .tab-x { border: 0; background: none; width: 40px; height: 44px; border-radius: 999px; font-size: 20px; line-height: 1; margin-left: -10px; }
+  .agregar { border: 1.5px dashed var(--ink-2); background: transparent; border-radius: 999px; padding: 10px 16px; min-height: 44px; font-weight: 700; color: var(--ink); }
+  .agregar:disabled { opacity: 0.45; }
+  .tabs-nota { font-size: 13px; color: var(--ink-2); margin: 0 0 4px; }
+
+  /* Pasos */
+  section.paso { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 16px 20px; margin-top: 16px; }
+  .paso h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; margin: 0; display: flex; align-items: baseline; gap: 10px; }
+  .paso h2 .num { font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 800; color: var(--accent); letter-spacing: 0.08em; }
+  .paso .ayuda { color: var(--ink-2); font-size: 14px; margin: 6px 0 14px; }
+
+  /* Cordones */
+  .cordones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .cordon { border: 1.5px solid var(--line); background: #fff; border-radius: 14px; padding: 12px 6px 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 44px; text-align: center; }
+  .cordon[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--ink) inset; }
+  .cordon:disabled { opacity: 0.5; }
+  .swatch { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(58, 37, 48, 0.18); background: var(--c, #ccc); }
+  .cordon .nom { font-weight: 700; font-size: 14px; line-height: 1.2; }
+
+  /* Avisos de stock */
+  .nota { font-size: 12px; font-weight: 800; line-height: 1.2; min-height: 15px; }
+  .nota.bajo { color: var(--low); }
+  .nota.out { color: var(--out); }
+  .nota.ok { color: var(--ok); }
+
+  /* Nombre */
+  label.campo { display: block; font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+  .input { width: 100%; min-height: 48px; border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 14px; background: #fff; font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .input:focus { border-color: var(--ink); outline: none; box-shadow: 0 0 0 3px rgba(198, 150, 60, 0.35); }
+  .contador { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-2); margin-top: 6px; }
+  .cuentas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; min-height: 36px; }
+  .cuenta { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-weight: 800; font-size: 15px; background: #F3E6F0; border: 1px solid #E4CFE0; }
+  .cuenta:nth-child(3n+2) { background: #FFF3C9; border-color: #F0DE9C; }
+  .cuenta:nth-child(3n) { background: #DDF1E8; border-color: #BFE2D2; }
+  .cuenta.falta { background: #F9D9D6; border-color: var(--danger); color: var(--danger); }
+  .cuenta.espacio { background: transparent; border: 0; width: 12px; }
+  .error-campo { color: var(--danger); font-size: 14px; font-weight: 700; margin: 10px 0 0; }
+
+  /* Colgantes */
+  .estado-colg { font-size: 14px; font-weight: 700; margin: -4px 0 12px; }
+  .estado-colg.lleno { color: var(--ok); }
+  .colgantes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  @media (min-width: 600px) { .colgantes { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .colg { border: 1.5px solid var(--line); background: #fff; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .colg.elegido { border-color: var(--ink); }
+  .colg.agotado { opacity: 0.6; }
+  .thumb { width: 64px; height: 64px; border-radius: 50%; overflow: hidden; align-self: center; display: grid; place-items: center; background: color-mix(in srgb, var(--c, #C6963C) 45%, #FFFCF7); font-family: 'Fraunces', serif; font-size: 26px; font-weight: 600; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .colg .nom { font-weight: 700; font-size: 14px; line-height: 1.25; text-align: center; }
+  .colg .precio { font-size: 14px; color: var(--ink-2); text-align: center; }
+  .colg .nota { text-align: center; }
+  .contador-item { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+  .paso-btn { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--ink); background: #fff; font-size: 22px; font-weight: 700; line-height: 1; display: grid; place-items: center; }
+  .paso-btn.mas { background: var(--ink); color: var(--bg); }
+  .paso-btn:disabled { border-color: var(--line); background: #F2ECE4; color: #B3A6A0; }
+  .cant { font-weight: 800; font-size: 18px; min-width: 2ch; text-align: center; }
+
+  /* Barra inferior */
+  .barra { position: fixed; left: 0; right: 0; bottom: 0; background: var(--ink); color: var(--bg); padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); z-index: 10; }
+  .barra-in { max-width: 640px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .barra .total { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; line-height: 1.1; }
+  .barra .resumen { font-size: 13px; opacity: 0.8; }
+  .cta { border: 0; background: var(--accent); color: #2A1A22; font-weight: 800; border-radius: 999px; padding: 12px 20px; min-height: 48px; font-size: 16px; }
+  .cta:disabled { opacity: 0.5; }
+
+  /* Diálogo de revisión */
+  dialog { border: 0; border-radius: 20px; padding: 0; width: min(560px, calc(100vw - 24px)); max-height: calc(100vh - 32px); background: var(--card); color: var(--ink); }
+  dialog::backdrop { background: rgba(42, 26, 34, 0.55); }
+  .dlg { padding: 22px 18px 18px; }
+  .dlg h2 { font-family: 'Fraunces', serif; font-weight: 600; font-size: 26px; margin: 0 0 12px; }
+  .linea-ll { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; background: #fff; }
+  .linea-ll h3 { margin: 0 0 6px; font-size: 15px; }
+  .linea-ll p { margin: 2px 0; font-size: 14px; color: var(--ink-2); }
+  .linea-ll .sub { color: var(--ink); font-weight: 700; margin-top: 6px; }
+  .total-dlg { display: flex; justify-content: space-between; align-items: baseline; font-weight: 800; font-size: 18px; margin: 12px 0 16px; }
+  .errores { background: #FBE3E0; color: var(--danger); border-radius: 12px; padding: 12px 14px; margin: 0 0 12px; font-weight: 700; font-size: 14px; }
+  .errores ul { margin: 6px 0 0; padding-left: 18px; }
+  details { margin: 14px 0 0; font-size: 14px; }
+  details pre { white-space: pre-wrap; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-family: inherit; font-size: 13px; }
+  .acciones { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .wa { border: 0; background: #1F7A4D; color: #fff; font-weight: 800; border-radius: 999px; min-height: 52px; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+  .wa:disabled { opacity: 0.55; }
+  .volver { border: 1.5px solid var(--line); background: transparent; border-radius: 999px; min-height: 48px; font-weight: 700; }
+  .fallback { font-size: 14px; text-align: center; }
+  .fallback a { color: var(--ink); font-weight: 800; }
+
+  .cargando, .fallo { text-align: center; padding: 40px 0; color: var(--ink-2); }
+  .fallo button { margin-top: 12px; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="marca" aria-label="Gomper">
+      <svg width="30" height="56" viewBox="0 0 30 56" aria-hidden="true" fill="none">
+        <path d="M 13.1,23.4 A 10,10 0 1 1 16.9,23.4" stroke="#C6963C" stroke-width="3" stroke-linecap="round"/>
+        <ellipse cx="15" cy="30" rx="3.2" ry="5" stroke="#C6963C" stroke-width="2"/>
+        <ellipse cx="15" cy="38" rx="3.2" ry="5" stroke="#C6963C" stroke-width="2"/>
+        <path d="M 10,44 L 20,44 L 22,48 L 15,55 L 8,48 Z" fill="#C6963C"/>
+      </svg>
+      <p class="wordmark">gomper</p>
+    </div>
+    <p class="tagline">Charms &amp; Accesorios</p>
+    <p class="intro">Armá tu llavero: elegí el cordón, tu nombre y hasta dos colgantes. El pedido te llega listo a WhatsApp.</p>
+  </header>
+
+  <div id="demo"></div>
+  <div id="estado"></div>
+
+  <div id="armador" hidden>
+    <nav class="tabs" id="tabs" aria-label="Llaveros del pedido"></nav>
+    <p class="tabs-nota" id="tabs-nota"></p>
+
+    <section class="paso" aria-labelledby="t-cordon">
+      <h2 id="t-cordon"><span class="num">PASO 1</span> Elegí el cordón</h2>
+      <p class="ayuda">Incluye el armado, el mosquetón y los abalorios.</p>
+      <div class="cordones" id="cordones"></div>
+    </section>
+
+    <section class="paso" aria-labelledby="t-nombre">
+      <h2 id="t-nombre"><span class="num">PASO 2</span> Tu nombre</h2>
+      <p class="ayuda">Opcional. Lo armamos con letras acrílicas.</p>
+      <label class="campo" for="nombre">Nombre o palabra</label>
+      <input class="input" id="nombre" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Ej: MIA">
+      <div class="contador"><span id="letras-precio"></span><span id="letras-cuenta"></span></div>
+      <div class="cuentas" id="cuentas" aria-hidden="true"></div>
+      <p class="error-campo" id="nombre-error" role="alert"></p>
+    </section>
+
+    <section class="paso" aria-labelledby="t-colg">
+      <h2 id="t-colg"><span class="num">PASO 3</span> Colgantes</h2>
+      <p class="ayuda" id="colg-ayuda"></p>
+      <p class="estado-colg" id="colg-estado" aria-live="polite"></p>
+      <div class="colgantes" id="colgantes"></div>
+    </section>
+  </div>
+</div>
+
+<div class="barra" id="barra" hidden>
+  <div class="barra-in">
+    <div>
+      <div class="total" id="total" aria-live="polite">Gs. 0</div>
+      <div class="resumen" id="resumen"></div>
+    </div>
+    <button class="cta" id="revisar" type="button">Revisar pedido</button>
+  </div>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlg-titulo">
+  <div class="dlg">
+    <h2 id="dlg-titulo">Tu pedido</h2>
+    <div id="dlg-errores"></div>
+    <div id="dlg-lista"></div>
+    <div class="total-dlg"><span>Total</span><span id="dlg-total"></span></div>
+    <label class="campo" for="cliente">Tu nombre (para el pedido)</label>
+    <input class="input" id="cliente" type="text" autocomplete="name" style="text-transform:none;letter-spacing:0;font-size:16px" placeholder="Ej: María González">
+    <details>
+      <summary>Ver el mensaje que se enviará</summary>
+      <pre id="dlg-mensaje"></pre>
+    </details>
+    <div class="acciones">
+      <button class="wa" id="enviar" type="button">Enviar pedido por WhatsApp</button>
+      <p class="fallback" id="fallback" hidden></p>
+      <button class="volver" id="cerrar" type="button">Seguir armando</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ============ AJUSTES: completá estos dos valores ============ */
+const AJUSTES = {
+  // URL de la aplicación web de Apps Script (termina en /exec). Vacío = modo demostración.
+  API_URL: 'https://script.google.com/macros/s/AKfycbxup5llIngMMpMTGD13_eAF-W7FjvsRfzUbvs5wew-Uab_lW2Vi0-Kgj-spp9Sg9SjJ/exec',
+  // Número de WhatsApp de Gomper con código de país, sin "+" ni espacios. Ej: 595981123456
+  WHATSAPP: '595971307103'
+};
+/* ============================================================ */
+
+const LIMITES_BASE = { maxLlaveros: 2, maxColgantes: 2, maxLetras: 10, stockBajo: 5 };
+
+// Datos de ejemplo (mismos que crea setup() en la planilla). Solo se usan en modo demostración.
+const DEMO = (() => {
+  const items = [];
+  let orden = 1;
+  [['C-AMA','Amarillo','#F2D64B',12],['C-LIL','Lila','#B79BD9',9],['C-BLA','Blanco','#F4F1EA',15],
+   ['C-CEL','Celeste','#8EC5E8',4],['C-ROS','Rosa','#F2A7C0',3],['C-MEN','Verde menta','#9ED9C0',0]]
+    .forEach(c => items.push({ id: c[0], categoria: 'cordon', nombre: c[1], precio: 45000, stock: c[3], color: c[2], imagen: '', orden: orden++ }));
+  const letras = { A:30,B:6,C:10,D:8,E:25,F:4,G:6,H:4,I:20,J:4,K:2,L:15,M:12,N:15,'Ñ':2,O:20,P:6,Q:2,R:15,S:12,T:10,U:10,V:5,W:1,X:2,Y:3,Z:3 };
+  Object.keys(letras).forEach(l => items.push({ id: 'L-' + l, categoria: 'letra', nombre: 'Letra ' + l, precio: 0, stock: letras[l], color: '', imagen: '', orden: orden++ }));
+  [['P-RAQ-STR','Raqueta con strass',35000,3,'#E9D7A8'],['P-PEL-TEN','Pelota de tenis',30000,8,'#D7E34A'],
+   ['P-PEL-ROS','Pelota de tenis rosa',25000,5,'#E8789E'],['P-RAQ-AZU','Raqueta azul',20000,10,'#6FA3D8'],
+   ['P-GIR','Girasol',20000,12,'#F2C94C'],['P-COR-VER','Corazón verde',20000,7,'#8CCB5E'],
+   ['P-TOR','Tortuga esmaltada',20000,4,'#4FA36B'],['P-EST','Estrella de mar',20000,1,'#D9534F'],
+   ['P-PER','Perrito globo',15000,6,'#9ED9C0'],['P-OJO','Ojota',15000,0,'#DDE3EA'],
+   ['P-COR-ROS','Corazón rosa',15000,20,'#F2A7C0'],['P-FLO','Flor lila',15000,9,'#B79BD9']]
+    .forEach(c => items.push({ id: c[0], categoria: 'colgante', nombre: c[1], precio: c[2], stock: c[3], color: c[4], imagen: '', orden: orden++ }));
+  return { ok: true, items, limites: LIMITES_BASE };
+})();
+
+const st = {
+  items: [], byId: {}, lim: { ...LIMITES_BASE },
+  llaveros: [nuevoLlavero()], activo: 0,
+  cargando: true, error: null, demo: false, enviando: false
+};
+
+function nuevoLlavero() { return { cordon: null, nombre: '', colgantes: {} }; }
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const gs = n => 'Gs. ' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const colorSeguro = c => /^#[0-9a-f]{3,8}$/i.test(c || '') ? c : '#C6963C';
+
+function normalizarNombre(texto) {
+  let s = String(texto || '').toUpperCase().replace(/Ñ/g, '\u0001');
+  s = s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\u0001/g, 'Ñ');
+  return s.replace(/[^A-ZÑ ]/g, '').replace(/\s+/g, ' ').trimStart();
+}
+const letrasDe = nombre => normalizarNombre(nombre).replace(/ /g, '').split('').filter(Boolean);
+
+const porCategoria = cat => st.items.filter(i => i.categoria === cat).sort((a, b) => a.orden - b.orden);
+const actual = () => st.llaveros[st.activo];
+
+/** Cuántas unidades de cada componente usa todo el pedido. */
+function uso() {
+  const m = {};
+  const add = (id, q) => { m[id] = (m[id] || 0) + q; };
+  st.llaveros.forEach(l => {
+    if (l.cordon) add(l.cordon, 1);
+    letrasDe(l.nombre).forEach(ch => add('L-' + ch, 1));
+    Object.entries(l.colgantes).forEach(([id, q]) => { if (q > 0) add(id, q); });
+  });
+  return m;
+}
+const stockDe = id => (st.byId[id] ? st.byId[id].stock : 0);
+const restante = (id, m) => stockDe(id) - (m[id] || 0);
+const colgantesEn = l => Object.values(l.colgantes).reduce((a, b) => a + b, 0);
+
+function precioLlavero(l) {
+  let t = 0;
+  if (l.cordon && st.byId[l.cordon]) t += st.byId[l.cordon].precio;
+  letrasDe(l.nombre).forEach(ch => { const it = st.byId['L-' + ch]; if (it) t += it.precio; });
+  Object.entries(l.colgantes).forEach(([id, q]) => { if (st.byId[id]) t += st.byId[id].precio * q; });
+  return t;
+}
+const totalPedido = () => st.llaveros.reduce((a, l) => a + precioLlavero(l), 0);
+
+/** Texto del aviso de stock según lo que queda después de lo que ya está en el pedido. */
+function avisoStock(stock, rest, elegido) {
+  if (stock <= 0 && !elegido) return { txt: 'Agotado', cls: 'out' };
+  if (rest <= 0) return elegido ? { txt: '¡Te llevás el último!', cls: 'bajo' } : { txt: 'Sin más unidades', cls: 'out' };
+  if (rest === 1) return { txt: '¡Queda solo 1!', cls: 'bajo' };
+  if (rest <= st.lim.stockBajo) return { txt: '¡Quedan solo ' + rest + '!', cls: 'bajo' };
+  return { txt: '', cls: '' };
+}
+
+/* ---------- Render ---------- */
+function render() {
+  $('demo').innerHTML = st.demo
+    ? '<p class="demo"><strong>Modo demostración:</strong> estás viendo datos de ejemplo. Al conectar la planilla de Google, el stock y los precios serán los reales.</p>'
+    : '';
+
+  if (st.cargando) { $('estado').innerHTML = '<p class="cargando">Cargando catálogo…</p>'; }
+  else if (st.error) { $('estado').innerHTML = '<div class="fallo"><p>' + esc(st.error) + '</p><button class="volver" type="button" data-accion="reintentar" style="padding:0 20px">Reintentar</button></div>'; }
+  else { $('estado').innerHTML = ''; }
+
+  const listo = !st.cargando && !st.error;
+  $('armador').hidden = !listo;
+  $('barra').hidden = !listo;
+  if (!listo) return;
+
+  const m = uso();
+  const l = actual();
+
+  // Pestañas
+  let tabs = st.llaveros.map((ll, i) => {
+    const activo = i === st.activo;
+    const quitar = st.llaveros.length > 1
+      ? '<button class="tab-x" type="button" data-accion="quitar" data-i="' + i + '" aria-label="Quitar llavero ' + (i + 1) + '">×</button>' : '';
+    return '<span class="tab' + (activo ? ' activo' : '') + '"><button class="tab-btn" type="button" data-accion="tab" data-i="' + i + '" aria-current="' + (activo ? 'true' : 'false') + '">Llavero ' + (i + 1) + '</button>' + quitar + '</span>';
+  }).join('');
+  const lleno = st.llaveros.length >= st.lim.maxLlaveros;
+  tabs += '<button class="agregar" type="button" data-accion="agregar"' + (lleno ? ' disabled' : '') + '>+ Agregar otro llavero</button>';
+  $('tabs').innerHTML = tabs;
+  $('tabs-nota').textContent = lleno ? 'Máximo ' + st.lim.maxLlaveros + ' llaveros por pedido.' : 'Podés armar hasta ' + st.lim.maxLlaveros + ' llaveros en un pedido.';
+
+  // Cordones
+  $('cordones').innerHTML = porCategoria('cordon').map(c => {
+    const elegido = l.cordon === c.id;
+    const rest = restante(c.id, m);
+    const a = avisoStock(c.stock, rest, elegido);
+    const deshab = !elegido && rest <= 0;
+    return '<button class="cordon" type="button" data-accion="cordon" data-id="' + esc(c.id) + '" aria-pressed="' + elegido + '"' + (deshab ? ' disabled' : '') + '>' +
+      '<span class="swatch" style="--c:' + colorSeguro(c.color) + '"></span>' +
+      '<span class="nom">' + esc(c.nombre) + '</span>' +
+      '<span class="nota ' + a.cls + '">' + esc(a.txt) + '</span></button>';
+  }).join('');
+
+  // Nombre
+  const letras = letrasDe(l.nombre);
+  const faltan = [...new Set(letras.filter(ch => restante('L-' + ch, m) < 0))];
+  const vista = normalizarNombre(l.nombre).trim().split('');
+  $('cuentas').innerHTML = vista.map(ch => ch === ' '
+    ? '<span class="cuenta espacio"></span>'
+    : '<span class="cuenta' + (faltan.includes(ch) ? ' falta' : '') + '">' + esc(ch) + '</span>').join('');
+  const precioLetras = letras.reduce((a, ch) => a + (st.byId['L-' + ch] ? st.byId['L-' + ch].precio : 0), 0);
+  $('letras-precio').textContent = letras.length ? (precioLetras ? '+ ' + gs(precioLetras) : 'Letras incluidas') : '';
+  $('letras-cuenta').textContent = letras.length + ' / ' + st.lim.maxLetras + ' letras';
+  let errNombre = '';
+  if (letras.length > st.lim.maxLetras) errNombre = 'Máximo ' + st.lim.maxLetras + ' letras por llavero.';
+  else if (faltan.length) errNombre = 'No nos alcanzan estas letras: ' + faltan.map(ch => ch + ' (tenemos ' + Math.max(0, stockDe('L-' + ch)) + ')').join(', ') + '. Probá con otro nombre o abreviatura.';
+  $('nombre-error').textContent = errNombre;
+
+  // Colgantes
+  const enEste = colgantesEn(l);
+  const max = st.lim.maxColgantes;
+  $('colg-ayuda').textContent = 'Elegí hasta ' + max + ' colgantes para este llavero.';
+  $('colg-estado').textContent = enEste >= max ? 'Llegaste al máximo de ' + max + ' colgantes en este llavero.' : 'Elegidos: ' + enEste + ' de ' + max;
+  $('colg-estado').className = 'estado-colg' + (enEste >= max ? ' lleno' : '');
+  $('colgantes').innerHTML = porCategoria('colgante').map(p => {
+    const q = l.colgantes[p.id] || 0;
+    const rest = restante(p.id, m);
+    const a = avisoStock(p.stock, rest, q > 0);
+    const masOff = rest <= 0 || enEste >= max;
+    const thumb = p.imagen
+      ? '<span class="thumb"><img src="' + esc(p.imagen) + '" alt="" loading="lazy"></span>'
+      : '<span class="thumb" style="--c:' + colorSeguro(p.color) + '" aria-hidden="true">' + esc(p.nombre.charAt(0)) + '</span>';
+    return '<div class="colg' + (q > 0 ? ' elegido' : '') + (p.stock <= 0 && q === 0 ? ' agotado' : '') + '">' + thumb +
+      '<span class="nom">' + esc(p.nombre) + '</span>' +
+      '<span class="precio">+ ' + gs(p.precio) + '</span>' +
+      '<span class="nota ' + a.cls + '">' + esc(a.txt) + '</span>' +
+      '<div class="contador-item">' +
+        '<button class="paso-btn" type="button" data-accion="menos" data-id="' + esc(p.id) + '" aria-label="Quitar ' + esc(p.nombre) + '"' + (q <= 0 ? ' disabled' : '') + '>−</button>' +
+        '<span class="cant" aria-label="Cantidad de ' + esc(p.nombre) + '">' + q + '</span>' +
+        '<button class="paso-btn mas" type="button" data-accion="mas" data-id="' + esc(p.id) + '" aria-label="Agregar ' + esc(p.nombre) + '"' + (masOff ? ' disabled' : '') + '>+</button>' +
+      '</div></div>';
+  }).join('');
+
+  // Barra
+  $('total').textContent = gs(totalPedido());
+  const n = st.llaveros.length;
+  $('resumen').textContent = n + (n === 1 ? ' llavero' : ' llaveros') + ' en tu pedido';
+}
+
+/* ---------- Validación y mensaje ---------- */
+function erroresPedido() {
+  const m = uso();
+  const errs = [];
+  st.llaveros.forEach((l, i) => {
+    const n = 'Llavero ' + (i + 1);
+    if (!l.cordon) errs.push(n + ': falta elegir el cordón.');
+    if (letrasDe(l.nombre).length > st.lim.maxLetras) errs.push(n + ': el nombre supera las ' + st.lim.maxLetras + ' letras.');
+    if (colgantesEn(l) > st.lim.maxColgantes) errs.push(n + ': máximo ' + st.lim.maxColgantes + ' colgantes.');
+  });
+  Object.keys(m).forEach(id => {
+    if (restante(id, m) < 0) {
+      const it = st.byId[id];
+      errs.push('No alcanza el stock de "' + (it ? it.nombre : id) + '" (tenemos ' + Math.max(0, stockDe(id)) + ').');
+    }
+  });
+  return errs;
+}
+
+function lineasLlavero(l) {
+  const out = [];
+  if (l.cordon && st.byId[l.cordon]) out.push('Cordón: ' + st.byId[l.cordon].nombre);
+  const nom = normalizarNombre(l.nombre).trim();
+  if (nom) out.push('Nombre: ' + nom);
+  const colg = Object.entries(l.colgantes).filter(([, q]) => q > 0).map(([id, q]) => st.byId[id].nombre + ' (x' + q + ')');
+  if (colg.length) out.push('Colgantes: ' + colg.join(', '));
+  return out;
+}
+
+function mensajeWhatsApp(numero, cliente) {
+  const L = ['¡Hola Gomper! Quiero hacer este pedido:'];
+  if (numero) L.push('Pedido N° ' + numero);
+  st.llaveros.forEach((l, i) => {
+    L.push('', 'Llavero ' + (i + 1));
+    lineasLlavero(l).forEach(t => L.push('- ' + t));
+    L.push('- Subtotal: ' + gs(precioLlavero(l)));
+  });
+  L.push('', 'Total: ' + gs(totalPedido()));
+  if (cliente) L.push('A nombre de: ' + cliente);
+  return L.join('\n');
+}
+
+function pedidoParaServidor(cliente) {
+  return {
+    cliente,
+    llaveros: st.llaveros.map(l => ({
+      cordon: l.cordon,
+      nombre: normalizarNombre(l.nombre).trim(),
+      colgantes: Object.entries(l.colgantes).filter(([, q]) => q > 0).map(([id, cantidad]) => ({ id, cantidad }))
+    }))
+  };
+}
+
+function renderDialogo(erroresServidor) {
+  const errs = erroresServidor || erroresPedido();
+  $('dlg-errores').innerHTML = errs.length
+    ? '<div class="errores" role="alert">Revisá antes de enviar:<ul>' + errs.map(e => '<li>' + esc(e) + '</li>').join('') + '</ul></div>' : '';
+  $('dlg-lista').innerHTML = st.llaveros.map((l, i) =>
+    '<div class="linea-ll"><h3>Llavero ' + (i + 1) + '</h3>' +
+    (lineasLlavero(l).map(t => '<p>' + esc(t) + '</p>').join('') || '<p>Todavía vacío</p>') +
+    '<p class="sub">Subtotal: ' + gs(precioLlavero(l)) + '</p></div>').join('');
+  $('dlg-total').textContent = gs(totalPedido());
+  $('dlg-mensaje').textContent = mensajeWhatsApp(null, $('cliente').value.trim());
+  $('enviar').disabled = errs.length > 0 || st.enviando;
+  $('enviar').textContent = st.enviando ? 'Enviando…' : 'Enviar pedido por WhatsApp';
+}
+
+async function enviar() {
+  if (erroresPedido().length) { renderDialogo(); return; }
+  const cliente = $('cliente').value.trim();
+  st.enviando = true; renderDialogo();
+  let numero = null;
+  if (AJUSTES.API_URL) {
+    try {
+      const r = await fetch(AJUSTES.API_URL, { method: 'POST', body: JSON.stringify(pedidoParaServidor(cliente)) });
+      const data = await r.json();
+      if (!data.ok) {
+        st.enviando = false;
+        await cargar(true);
+        renderDialogo(data.errores && data.errores.length ? data.errores : ['No pudimos registrar el pedido.']);
+        render();
+        return;
+      }
+      numero = data.numero;
+    } catch (e) {
+      // Sin conexión con la planilla: igual mandamos el pedido por WhatsApp.
+      numero = null;
+    }
+  } else {
+    numero = 'DEMO-' + Date.now().toString(36).toUpperCase();
+  }
+  const url = 'https://wa.me/' + AJUSTES.WHATSAPP + '?text=' + encodeURIComponent(mensajeWhatsApp(numero, cliente));
+  st.enviando = false;
+  renderDialogo();
+  $('fallback').hidden = false;
+  $('fallback').innerHTML = 'Si WhatsApp no se abrió solo, <a href="' + esc(url) + '" target="_blank" rel="noopener">tocá acá para enviar el pedido</a>.';
+  window.location.href = url;
+}
+
+/* ---------- Datos ---------- */
+function usarCatalogo(data) {
+  st.items = (data.items || []).map(it => ({ ...it, stock: Math.max(0, Math.floor(Number(it.stock) || 0)), precio: Number(it.precio) || 0 }));
+  st.byId = Object.fromEntries(st.items.map(it => [it.id, it]));
+  st.lim = { ...LIMITES_BASE, ...(data.limites || {}) };
+  // Limpia elecciones que ya no existen en el catálogo
+  st.llaveros.forEach(l => {
+    if (l.cordon && !st.byId[l.cordon]) l.cordon = null;
+    Object.keys(l.colgantes).forEach(id => { if (!st.byId[id]) delete l.colgantes[id]; });
+  });
+}
+
+async function cargar(silencioso) {
+  if (!silencioso) { st.cargando = true; render(); }
+  try {
+    if (!AJUSTES.API_URL) {
+      st.demo = true;
+      usarCatalogo(DEMO);
+    } else {
+      const r = await fetch(AJUSTES.API_URL + '?t=' + Date.now());
+      const data = await r.json();
+      if (!data.ok) throw new Error('respuesta inválida');
+      usarCatalogo(data);
+    }
+    st.error = null;
+  } catch (e) {
+    st.error = 'No pudimos cargar el catálogo. Revisá tu conexión e intentá de nuevo.';
+  }
+  st.cargando = false;
+  render();
+}
+
+/* ---------- Eventos ---------- */
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-accion]');
+  if (!b || b.disabled) return;
+  const l = actual();
+  const id = b.dataset.id;
+  switch (b.dataset.accion) {
+    case 'tab':
+      st.activo = Number(b.dataset.i);
+      $('nombre').value = actual().nombre;
+      break;
+    case 'agregar':
+      if (st.llaveros.length < st.lim.maxLlaveros) {
+        st.llaveros.push(nuevoLlavero());
+        st.activo = st.llaveros.length - 1;
+        $('nombre').value = '';
+      }
+      break;
+    case 'quitar':
+      st.llaveros.splice(Number(b.dataset.i), 1);
+      st.activo = Math.min(st.activo, st.llaveros.length - 1);
+      $('nombre').value = actual().nombre;
+      break;
+    case 'cordon':
+      l.cordon = l.cordon === id ? null : id;
+      break;
+    case 'mas':
+      if (colgantesEn(l) < st.lim.maxColgantes && restante(id, uso()) > 0) l.colgantes[id] = (l.colgantes[id] || 0) + 1;
+      break;
+    case 'menos':
+      if (l.colgantes[id] > 0) l.colgantes[id] -= 1;
+      if (!l.colgantes[id]) delete l.colgantes[id];
+      break;
+    case 'reintentar':
+      cargar();
+      return;
+  }
+  render();
+});
+
+$('nombre').addEventListener('input', e => {
+  actual().nombre = e.target.value;
+  render();
+});
+
+$('revisar').addEventListener('click', async () => {
+  $('fallback').hidden = true;
+  if (AJUSTES.API_URL) await cargar(true); // stock fresco antes de revisar
+  renderDialogo();
+  $('dlg').showModal();
+});
+$('cliente').addEventListener('input', () => renderDialogo());
+$('enviar').addEventListener('click', enviar);
+$('cerrar').addEventListener('click', () => $('dlg').close());
+
+cargar();
+</script>
+</body>
+</html>
