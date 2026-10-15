@@ -47,7 +47,13 @@
   .marca svg { display: block; }
   .wordmark { font-family: 'Fraunces', serif; font-weight: 600; font-size: 48px; line-height: 1; letter-spacing: -0.02em; margin: 6px 0 0; }
   .tagline { font-size: 12px; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-2); margin: 10px 0 0; }
-  .intro { color: var(--ink-2); margin: 14px auto 0; max-width: 34ch; }
+  .intro { font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; line-height: 1.2; margin: 18px auto 0; max-width: 22ch; }
+  .pasos-resumen { list-style: none; padding: 0; margin: 14px 0 0; display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+  .pasos-resumen li { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px 6px 6px; font-weight: 700; font-size: 14px; }
+  .pasos-resumen li span { width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-size: 12px; font-weight: 800; }
+  .precio-base { margin: 16px auto 0; display: inline-block; background: var(--ink); color: var(--bg); border-radius: 14px; padding: 10px 18px; }
+  .precio-base strong { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; display: block; line-height: 1.15; }
+  .precio-base span { font-size: 13px; opacity: 0.85; }
 
   .demo { background: #EFE3F2; color: #4B2D57; border-radius: 12px; padding: 10px 14px; font-size: 14px; margin: 16px 0 0; }
 
@@ -87,9 +93,8 @@
   .input:focus { border-color: var(--ink); outline: none; box-shadow: 0 0 0 3px rgba(198, 150, 60, 0.35); }
   .contador { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-2); margin-top: 6px; }
   .cuentas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; min-height: 36px; }
-  .cuenta { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-weight: 800; font-size: 15px; background: #F3E6F0; border: 1px solid #E4CFE0; }
-  .cuenta:nth-child(3n+2) { background: #FFF3C9; border-color: #F0DE9C; }
-  .cuenta:nth-child(3n) { background: #DDF1E8; border-color: #BFE2D2; }
+  .cuentas { --cc: #E6D8C8; }
+  .cuenta { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-weight: 800; font-size: 15px; color: var(--ink); background: color-mix(in srgb, var(--cc) 72%, #FFFFFF); border: 1.5px solid color-mix(in srgb, var(--cc) 75%, #3A2530); }
   .cuenta.falta { background: #F9D9D6; border-color: var(--danger); color: var(--danger); }
   .cuenta.espacio { background: transparent; border: 0; width: 12px; }
   .error-campo { color: var(--danger); font-size: 14px; font-weight: 700; margin: 10px 0 0; }
@@ -107,11 +112,9 @@
   .colg .nom { font-weight: 700; font-size: 14px; line-height: 1.25; text-align: center; }
   .colg .precio { font-size: 14px; color: var(--ink-2); text-align: center; }
   .colg .nota { text-align: center; }
-  .contador-item { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
-  .paso-btn { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--ink); background: #fff; font-size: 22px; font-weight: 700; line-height: 1; display: grid; place-items: center; }
-  .paso-btn.mas { background: var(--ink); color: var(--bg); }
-  .paso-btn:disabled { border-color: var(--line); background: #F2ECE4; color: #B3A6A0; }
-  .cant { font-weight: 800; font-size: 18px; min-width: 2ch; text-align: center; }
+  .toggle { margin-top: 4px; width: 100%; min-height: 44px; border-radius: 999px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--bg); font-weight: 800; font-size: 15px; }
+  .toggle[aria-pressed="true"] { background: #fff; color: var(--ink); }
+  .toggle:disabled { border-color: var(--line); background: #F2ECE4; color: #9C8F8A; }
 
   /* Barra inferior */
   .barra { position: fixed; left: 0; right: 0; bottom: 0; background: var(--ink); color: var(--bg); padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); z-index: 10; }
@@ -160,7 +163,13 @@
       <p class="wordmark">gomper</p>
     </div>
     <p class="tagline">Charms &amp; Accesorios</p>
-    <p class="intro">Armá tu llavero: elegí el cordón, tu nombre y hasta dos colgantes. El pedido te llega listo a WhatsApp.</p>
+    <p class="intro">Armá tu llavero en 3 simples pasos</p>
+    <ol class="pasos-resumen" aria-label="Pasos">
+      <li><span>1</span>Cordón</li>
+      <li><span>2</span>Nombre</li>
+      <li><span>3</span>Colgantes</li>
+    </ol>
+    <p class="precio-base" id="precio-base" hidden></p>
   </header>
 
   <div id="demo"></div>
@@ -178,9 +187,9 @@
 
     <section class="paso" aria-labelledby="t-nombre">
       <h2 id="t-nombre"><span class="num">PASO 2</span> Tu nombre</h2>
-      <p class="ayuda">Opcional. Lo armamos con letras acrílicas.</p>
+      <p class="ayuda" id="nombre-ayuda">Opcional. Solo letras.</p>
       <label class="campo" for="nombre">Nombre o palabra</label>
-      <input class="input" id="nombre" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Ej: MIA">
+      <input class="input" id="nombre" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="Ej: MIA">
       <div class="contador"><span id="letras-precio"></span><span id="letras-cuenta"></span></div>
       <div class="cuentas" id="cuentas" aria-hidden="true"></div>
       <p class="error-campo" id="nombre-error" role="alert"></p>
@@ -243,15 +252,15 @@ const DEMO = (() => {
   let orden = 1;
   [['C-AMA','Amarillo','#F2D64B',12],['C-LIL','Lila','#B79BD9',9],['C-BLA','Blanco','#F4F1EA',15],
    ['C-CEL','Celeste','#8EC5E8',4],['C-ROS','Rosa','#F2A7C0',3],['C-MEN','Verde menta','#9ED9C0',0]]
-    .forEach(c => items.push({ id: c[0], categoria: 'cordon', nombre: c[1], precio: 45000, stock: c[3], color: c[2], imagen: '', orden: orden++ }));
+    .forEach(c => items.push({ id: c[0], categoria: 'cordon', nombre: c[1], precio: 50000, stock: c[3], color: c[2], imagen: '', orden: orden++ }));
   const letras = { A:30,B:6,C:10,D:8,E:25,F:4,G:6,H:4,I:20,J:4,K:2,L:15,M:12,N:15,'Ñ':2,O:20,P:6,Q:2,R:15,S:12,T:10,U:10,V:5,W:1,X:2,Y:3,Z:3 };
   Object.keys(letras).forEach(l => items.push({ id: 'L-' + l, categoria: 'letra', nombre: 'Letra ' + l, precio: 0, stock: letras[l], color: '', imagen: '', orden: orden++ }));
-  [['P-RAQ-STR','Raqueta con strass',35000,3,'#E9D7A8'],['P-PEL-TEN','Pelota de tenis',30000,8,'#D7E34A'],
-   ['P-PEL-ROS','Pelota de tenis rosa',25000,5,'#E8789E'],['P-RAQ-AZU','Raqueta azul',20000,10,'#6FA3D8'],
-   ['P-GIR','Girasol',20000,12,'#F2C94C'],['P-COR-VER','Corazón verde',20000,7,'#8CCB5E'],
-   ['P-TOR','Tortuga esmaltada',20000,4,'#4FA36B'],['P-EST','Estrella de mar',20000,1,'#D9534F'],
-   ['P-PER','Perrito globo',15000,6,'#9ED9C0'],['P-OJO','Ojota',15000,0,'#DDE3EA'],
-   ['P-COR-ROS','Corazón rosa',15000,20,'#F2A7C0'],['P-FLO','Flor lila',15000,9,'#B79BD9']]
+  [['P-RAQ-STR','Raqueta con strass',0,3,'#E9D7A8'],['P-PEL-TEN','Pelota de tenis',0,8,'#D7E34A'],
+   ['P-PEL-ROS','Pelota de tenis rosa',0,5,'#E8789E'],['P-RAQ-AZU','Raqueta azul',0,10,'#6FA3D8'],
+   ['P-GIR','Girasol',0,12,'#F2C94C'],['P-COR-VER','Corazón verde',0,7,'#8CCB5E'],
+   ['P-TOR','Tortuga esmaltada',0,4,'#4FA36B'],['P-EST','Estrella de mar',0,1,'#D9534F'],
+   ['P-PER','Perrito globo',0,6,'#9ED9C0'],['P-OJO','Ojota',0,0,'#DDE3EA'],
+   ['P-COR-ROS','Corazón rosa',0,20,'#F2A7C0'],['P-FLO','Flor lila',0,9,'#B79BD9']]
     .forEach(c => items.push({ id: c[0], categoria: 'colgante', nombre: c[1], precio: c[2], stock: c[3], color: c[4], imagen: '', orden: orden++ }));
   return { ok: true, items, limites: LIMITES_BASE };
 })();
@@ -274,6 +283,8 @@ function normalizarNombre(texto) {
   return s.replace(/[^A-ZÑ ]/g, '').replace(/\s+/g, ' ').trimStart();
 }
 const letrasDe = nombre => normalizarNombre(nombre).replace(/ /g, '').split('').filter(Boolean);
+/** Deja solo letras (sin espacios, números ni símbolos), en mayúsculas y hasta el máximo permitido. */
+const limpiarNombre = v => normalizarNombre(v).replace(/ /g, '').slice(0, st.lim.maxLetras);
 
 const porCategoria = cat => st.items.filter(i => i.categoria === cat).sort((a, b) => a.orden - b.orden);
 const actual = () => st.llaveros[st.activo];
@@ -324,7 +335,17 @@ function render() {
   const listo = !st.cargando && !st.error;
   $('armador').hidden = !listo;
   $('barra').hidden = !listo;
+  $('precio-base').hidden = true;
   if (!listo) return;
+
+  // Precio del llavero completo (sale de la hoja Stock: precio del cordón)
+  const precios = porCategoria('cordon').map(c => c.precio);
+  if (precios.length) {
+    const min = Math.min(...precios), maxP = Math.max(...precios);
+    $('precio-base').hidden = false;
+    $('precio-base').innerHTML = '<strong>' + (min === maxP ? '' : 'Desde ') + gs(min) + '</strong>' +
+      '<span>Cordón + nombre + hasta ' + st.lim.maxColgantes + ' colgantes</span>';
+  }
 
   const m = uso();
   const l = actual();
@@ -356,12 +377,13 @@ function render() {
   // Nombre
   const letras = letrasDe(l.nombre);
   const faltan = [...new Set(letras.filter(ch => restante('L-' + ch, m) < 0))];
-  const vista = normalizarNombre(l.nombre).trim().split('');
-  $('cuentas').innerHTML = vista.map(ch => ch === ' '
-    ? '<span class="cuenta espacio"></span>'
-    : '<span class="cuenta' + (faltan.includes(ch) ? ' falta' : '') + '">' + esc(ch) + '</span>').join('');
+  const colorCordon = l.cordon && st.byId[l.cordon] ? colorSeguro(st.byId[l.cordon].color) : '#E6D8C8';
+  $('cuentas').style.setProperty('--cc', colorCordon);
+  $('cuentas').innerHTML = letras.map(ch =>
+    '<span class="cuenta' + (faltan.includes(ch) ? ' falta' : '') + '">' + esc(ch) + '</span>').join('');
+  $('nombre-ayuda').textContent = 'Opcional. Solo letras, hasta ' + st.lim.maxLetras + '.';
   const precioLetras = letras.reduce((a, ch) => a + (st.byId['L-' + ch] ? st.byId['L-' + ch].precio : 0), 0);
-  $('letras-precio').textContent = letras.length ? (precioLetras ? '+ ' + gs(precioLetras) : 'Letras incluidas') : '';
+  $('letras-precio').textContent = letras.length ? (precioLetras ? '+ ' + gs(precioLetras) : 'Incluido en el precio') : '';
   $('letras-cuenta').textContent = letras.length + ' / ' + st.lim.maxLetras + ' letras';
   let errNombre = '';
   if (letras.length > st.lim.maxLetras) errNombre = 'Máximo ' + st.lim.maxLetras + ' letras por llavero.';
@@ -371,26 +393,24 @@ function render() {
   // Colgantes
   const enEste = colgantesEn(l);
   const max = st.lim.maxColgantes;
-  $('colg-ayuda').textContent = 'Elegí hasta ' + max + ' colgantes para este llavero.';
+  $('colg-ayuda').textContent = 'Elegí hasta ' + max + ' colgantes.';
   $('colg-estado').textContent = enEste >= max ? 'Llegaste al máximo de ' + max + ' colgantes en este llavero.' : 'Elegidos: ' + enEste + ' de ' + max;
   $('colg-estado').className = 'estado-colg' + (enEste >= max ? ' lleno' : '');
   $('colgantes').innerHTML = porCategoria('colgante').map(p => {
-    const q = l.colgantes[p.id] || 0;
+    const elegido = !!l.colgantes[p.id];
     const rest = restante(p.id, m);
-    const a = avisoStock(p.stock, rest, q > 0);
-    const masOff = rest <= 0 || enEste >= max;
+    const a = avisoStock(p.stock, rest, elegido);
+    const bloqueado = !elegido && (rest <= 0 || enEste >= max);
     const thumb = p.imagen
       ? '<span class="thumb"><img src="' + esc(p.imagen) + '" alt="" loading="lazy"></span>'
       : '<span class="thumb" style="--c:' + colorSeguro(p.color) + '" aria-hidden="true">' + esc(p.nombre.charAt(0)) + '</span>';
-    return '<div class="colg' + (q > 0 ? ' elegido' : '') + (p.stock <= 0 && q === 0 ? ' agotado' : '') + '">' + thumb +
+    return '<div class="colg' + (elegido ? ' elegido' : '') + (p.stock <= 0 && !elegido ? ' agotado' : '') + '">' + thumb +
       '<span class="nom">' + esc(p.nombre) + '</span>' +
-      '<span class="precio">+ ' + gs(p.precio) + '</span>' +
+      (p.precio > 0 ? '<span class="precio">+ ' + gs(p.precio) + '</span>' : '') +
       '<span class="nota ' + a.cls + '">' + esc(a.txt) + '</span>' +
-      '<div class="contador-item">' +
-        '<button class="paso-btn" type="button" data-accion="menos" data-id="' + esc(p.id) + '" aria-label="Quitar ' + esc(p.nombre) + '"' + (q <= 0 ? ' disabled' : '') + '>−</button>' +
-        '<span class="cant" aria-label="Cantidad de ' + esc(p.nombre) + '">' + q + '</span>' +
-        '<button class="paso-btn mas" type="button" data-accion="mas" data-id="' + esc(p.id) + '" aria-label="Agregar ' + esc(p.nombre) + '"' + (masOff ? ' disabled' : '') + '>+</button>' +
-      '</div></div>';
+      '<button class="toggle" type="button" data-accion="toggle" data-id="' + esc(p.id) + '" aria-pressed="' + elegido + '"' +
+        ' aria-label="' + (elegido ? 'Quitar ' : 'Agregar ') + esc(p.nombre) + '"' + (bloqueado ? ' disabled' : '') + '>' +
+        (elegido ? 'Quitar' : 'Agregar') + '</button></div>';
   }).join('');
 
   // Barra
@@ -423,7 +443,7 @@ function lineasLlavero(l) {
   if (l.cordon && st.byId[l.cordon]) out.push('Cordón: ' + st.byId[l.cordon].nombre);
   const nom = normalizarNombre(l.nombre).trim();
   if (nom) out.push('Nombre: ' + nom);
-  const colg = Object.entries(l.colgantes).filter(([, q]) => q > 0).map(([id, q]) => st.byId[id].nombre + ' (x' + q + ')');
+  const colg = Object.entries(l.colgantes).filter(([, q]) => q > 0).map(([id, q]) => st.byId[id].nombre + (q > 1 ? ' (x' + q + ')' : ''));
   if (colg.length) out.push('Colgantes: ' + colg.join(', '));
   return out;
 }
@@ -556,12 +576,10 @@ document.addEventListener('click', ev => {
     case 'cordon':
       l.cordon = l.cordon === id ? null : id;
       break;
-    case 'mas':
-      if (colgantesEn(l) < st.lim.maxColgantes && restante(id, uso()) > 0) l.colgantes[id] = (l.colgantes[id] || 0) + 1;
-      break;
-    case 'menos':
-      if (l.colgantes[id] > 0) l.colgantes[id] -= 1;
-      if (!l.colgantes[id]) delete l.colgantes[id];
+    case 'toggle':
+      // Un mismo colgante solo puede ir una vez por llavero
+      if (l.colgantes[id]) delete l.colgantes[id];
+      else if (colgantesEn(l) < st.lim.maxColgantes && restante(id, uso()) > 0) l.colgantes[id] = 1;
       break;
     case 'reintentar':
       cargar();
@@ -571,7 +589,9 @@ document.addEventListener('click', ev => {
 });
 
 $('nombre').addEventListener('input', e => {
-  actual().nombre = e.target.value;
+  const limpio = limpiarNombre(e.target.value);
+  if (e.target.value !== limpio) e.target.value = limpio;
+  actual().nombre = limpio;
   render();
 });
 
