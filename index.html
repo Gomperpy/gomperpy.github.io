@@ -162,6 +162,13 @@
   .cargando, .fallo { text-align: center; padding: 40px 0; color: var(--ink-2); }
   .fallo button { margin-top: 12px; }
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Aviso de confirmación (flota sobre la barra inferior, visible aunque se haya scrolleado) */
+  .aviso { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom)); z-index: 11; transform: translate(-50%, 14px); opacity: 0; pointer-events: none; display: flex; align-items: center; gap: 8px; width: max-content; max-width: calc(100vw - 32px); background: var(--ok); color: #fff; border-radius: 999px; padding: 10px 18px 10px 12px; font-weight: 700; font-size: 15px; line-height: 1.3; box-shadow: 0 8px 24px rgba(42, 26, 34, 0.28); transition: opacity 0.2s ease, transform 0.2s ease; }
+  .aviso.visible { opacity: 1; transform: translate(-50%, 0); }
+  .aviso.neutro { background: var(--ink); }
+  .aviso svg { flex: none; }
+  @media (prefers-reduced-motion: reduce) { .aviso { transition: none; } }
 </style>
 </head>
 <body>
@@ -217,6 +224,8 @@
     </section>
   </div>
 </div>
+
+<div class="aviso" id="aviso" role="status" aria-live="polite"></div>
 
 <div class="barra" id="barra" hidden>
   <div class="barra-in">
@@ -319,6 +328,21 @@ function fotoDe(it) {
 }
 const imgFoto = u => '<img src="' + esc(urlFoto(u, 240)) + '" data-base="' + esc(u) + '" alt="" loading="lazy" decoding="async">';
 const ICONO_LUPA = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>';
+
+/* ---------- Aviso de confirmación ---------- */
+const ICONO_OK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+let avisoTimer = null;
+/** " al Llavero 2" solo cuando hay más de un llavero en el pedido. */
+const enLlavero = prep => st.llaveros.length > 1 ? prep + ' Llavero ' + (st.activo + 1) : '';
+/** Muestra un mensaje corto sobre la barra inferior. neutro = acción de quitar (sin tilde verde). */
+function avisar(texto, neutro) {
+  const el = $('aviso');
+  el.innerHTML = (neutro ? '' : ICONO_OK) + '<span>' + esc(texto) + '</span>';
+  el.classList.toggle('neutro', !!neutro);
+  el.classList.add('visible');
+  clearTimeout(avisoTimer);
+  avisoTimer = setTimeout(() => el.classList.remove('visible'), 2600);
+}
 
 function abrirFoto(id) {
   const it = st.byId[id];
@@ -625,20 +649,30 @@ document.addEventListener('click', ev => {
         st.llaveros.push(nuevoLlavero());
         st.activo = st.llaveros.length - 1;
         $('nombre').value = '';
+        avisar('Llavero ' + st.llaveros.length + ' agregado. Elegí su cordón.');
       }
       break;
     case 'quitar':
       st.llaveros.splice(Number(b.dataset.i), 1);
       st.activo = Math.min(st.activo, st.llaveros.length - 1);
       $('nombre').value = actual().nombre;
+      avisar('Quitaste el Llavero ' + (Number(b.dataset.i) + 1) + '.', true);
       break;
     case 'cordon':
       l.cordon = l.cordon === id ? null : id;
+      if (l.cordon) avisar('Cordón ' + st.byId[id].nombre + ' elegido' + enLlavero(' para el') + '.');
+      else avisar('Quitaste el cordón ' + st.byId[id].nombre + '.', true);
       break;
     case 'toggle':
       // Un mismo colgante solo puede ir una vez por llavero
-      if (l.colgantes[id]) delete l.colgantes[id];
-      else if (colgantesEn(l) < st.lim.maxColgantes && restante(id, uso()) > 0) l.colgantes[id] = 1;
+      if (l.colgantes[id]) {
+        delete l.colgantes[id];
+        avisar('Quitaste ' + st.byId[id].nombre + enLlavero(' del') + '.', true);
+      } else if (colgantesEn(l) < st.lim.maxColgantes && restante(id, uso()) > 0) {
+        l.colgantes[id] = 1;
+        const n = colgantesEn(l);
+        avisar(st.byId[id].nombre + ' agregado' + enLlavero(' al') + ' · ' + n + ' de ' + st.lim.maxColgantes + ' colgantes');
+      }
       break;
     case 'reintentar':
       cargar();
