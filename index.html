@@ -309,7 +309,7 @@ function urlFoto(u, ancho) {
     const m = u.match(/\/d\/([\w-]{20,})/) || u.match(/[?&]id=([\w-]{20,})/);
     u = m ? 'https://lh3.googleusercontent.com/d/' + m[1] : '';
   }
-  if (/^https:\/\/lh3\.googleusercontent\.com\/d\/[\w-]+$/.test(u)) return u + '=w' + ancho;
+  if (/^https:\/\/lh3\.googleusercontent\.com\/d\/[\w-]+$/.test(u)) return u + '=w' + ancho + '-rj'; // -rj: JPEG liviano
   return /^(https:\/\/|img\/)/.test(u) ? u : '';
 }
 /** Foto del producto si tiene una válida que no falló al cargar. */
