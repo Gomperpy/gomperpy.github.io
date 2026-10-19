@@ -73,11 +73,15 @@
   .intro { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 24px; line-height: 1.25; margin: 12px auto 0; max-width: 22ch; }
   .intro .resalte { color: var(--mint-fuerte); background: linear-gradient(transparent 62%, #FAD3E1 62%); padding: 0 2px; white-space: nowrap; }
   .pasos-resumen { list-style: none; padding: 0; margin: 14px 0 0; display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
-  .pasos-resumen li { display: inline-flex; align-items: center; gap: 7px; background: var(--card); border: 1.5px solid var(--line); border-radius: 999px; padding: 5px 13px 5px 5px; font-weight: 800; font-size: 14px; }
-  .pasos-resumen li span { width: 26px; height: 26px; border-radius: 50%; color: var(--ink); display: grid; place-items: center; font-family: 'Fredoka', sans-serif; font-size: 14px; font-weight: 600; }
-  .pasos-resumen li:nth-child(1) span { background: var(--mint); }
-  .pasos-resumen li:nth-child(2) span { background: var(--pink); }
-  .pasos-resumen li:nth-child(3) span { background: var(--lilac); }
+  .pasos-resumen li { display: flex; }
+  .ir-paso { display: inline-flex; align-items: center; gap: 7px; background: var(--card); color: var(--ink); border: 1.5px solid var(--line); border-radius: 999px; padding: 5px 13px 5px 5px; min-height: 40px; font-weight: 800; font-size: 14px; box-shadow: 0 2px 0 var(--line); }
+  .ir-paso:hover { border-color: var(--lilac-borde); }
+  .ir-paso:active { transform: translateY(1px); box-shadow: none; }
+  .ir-paso .n { width: 26px; height: 26px; border-radius: 50%; color: var(--ink); display: grid; place-items: center; font-family: 'Fredoka', sans-serif; font-size: 14px; font-weight: 600; }
+  .pasos-resumen li:nth-child(1) .n { background: var(--mint); }
+  .pasos-resumen li:nth-child(2) .n { background: var(--pink); }
+  .pasos-resumen li:nth-child(3) .n { background: var(--lilac); }
+  .ir-paso.hecho .n { background: var(--mint-fuerte); color: #fff; }
   .precio-base { margin: 16px auto 0; display: inline-block; background: var(--card); color: var(--ink); border: 2px solid var(--pink); border-radius: 18px; padding: 10px 20px; box-shadow: var(--sombra); }
   .precio-base strong { font-family: 'Fredoka', sans-serif; font-size: 28px; font-weight: 600; display: block; line-height: 1.1; color: var(--pink-fuerte); }
   .precio-base span { font-size: 13px; font-weight: 700; color: var(--ink-2); }
@@ -88,14 +92,24 @@
   .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 6px; align-items: center; }
   .tab { display: inline-flex; align-items: center; border: 1.5px solid var(--line); background: var(--card); border-radius: 999px; min-height: 44px; }
   .tab.activo { border-color: var(--lilac-borde); background: var(--lilac); }
-  .tab-btn { border: 0; background: none; padding: 10px 16px; min-height: 44px; font-weight: 800; border-radius: 999px; }
+  .tab-btn { border: 0; background: none; padding: 10px 16px; min-height: 44px; font-weight: 800; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; }
+  .tab.incompleto { border-color: var(--pink-fuerte); background: var(--pink-claro); }
+  .tab.activo.incompleto { background: var(--lilac); }
+  .estado-ll { width: 20px; height: 20px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 12px; font-weight: 800; line-height: 1; color: #fff; }
+  .estado-ll.ok { background: var(--mint-fuerte); }
+  .estado-ll.falta { background: var(--pink-fuerte); }
   .tab-x { border: 0; background: none; width: 40px; height: 44px; border-radius: 999px; font-size: 20px; line-height: 1; margin-left: -10px; }
   .agregar { border: 1.5px dashed var(--lilac-borde); background: rgba(255, 255, 255, 0.6); border-radius: 999px; padding: 10px 16px; min-height: 44px; font-weight: 800; color: #5B3E8F; }
   .agregar:disabled { opacity: 0.45; }
   .tabs-nota { font-size: 13px; color: var(--ink-2); margin: 0 0 4px; }
 
   /* Pasos */
-  section.paso { background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 18px 16px 20px; margin-top: 16px; box-shadow: var(--sombra); }
+  section.paso { background: var(--card); border: 1.5px solid var(--line); border-radius: var(--radius); padding: 18px 16px 20px; margin-top: 16px; box-shadow: var(--sombra); scroll-margin-top: 12px; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+  section.paso.pendiente { border-color: var(--pink-fuerte); box-shadow: 0 0 0 4px #FAD3E1, var(--sombra); }
+  .paso h2:focus { outline: none; }
+  .pendiente-msg { display: flex; align-items: center; gap: 8px; background: var(--pink-claro); color: var(--pink-fuerte); border-radius: 12px; padding: 9px 12px; font-weight: 800; font-size: 14px; margin: 0 0 14px; }
+  .pendiente-msg[hidden] { display: none; }
+  .pendiente-msg svg { flex: none; }
   .paso h2 { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 23px; margin: 0; display: flex; align-items: center; gap: 10px; }
   .paso h2 .num { font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; border-radius: 999px; padding: 3px 10px; color: var(--ink); }
   section.paso:nth-of-type(1) h2 .num { background: var(--mint); }
@@ -195,9 +209,16 @@
   .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
   /* Aviso de confirmación (flota sobre la barra inferior, visible aunque se haya scrolleado) */
-  .aviso { position: fixed; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom)); z-index: 11; transform: translate(-50%, 14px); opacity: 0; pointer-events: none; display: flex; align-items: center; gap: 8px; width: max-content; max-width: calc(100vw - 32px); background: var(--ok); color: #fff; border-radius: 999px; padding: 10px 18px 10px 12px; font-weight: 800; font-size: 15px; line-height: 1.3; box-shadow: 0 8px 24px rgba(74, 56, 69, 0.25); transition: opacity 0.2s ease, transform 0.2s ease; }
+  .aviso { position: fixed; left: 50%; bottom: calc(var(--alto-barra, 84px) + 10px); z-index: 11; transform: translate(-50%, 14px); opacity: 0; pointer-events: none; display: flex; align-items: center; gap: 8px; width: max-content; max-width: calc(100vw - 32px); background: var(--ok); color: #fff; border-radius: 999px; padding: 10px 18px 10px 12px; font-weight: 800; font-size: 15px; line-height: 1.3; box-shadow: 0 8px 24px rgba(74, 56, 69, 0.25); transition: opacity 0.2s ease, transform 0.2s ease; }
   .aviso.visible { opacity: 1; transform: translate(-50%, 0); }
   .aviso.neutro { background: var(--ink); }
+  .aviso.alerta { background: var(--pink-fuerte); }
+
+  /* Cargando */
+  .spinner { width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid currentColor; border-right-color: transparent; display: inline-block; vertical-align: -3px; margin-right: 8px; animation: girar 0.75s linear infinite; }
+  @keyframes girar { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 1.6s; } }
+  .cta[aria-busy="true"], .wa[aria-busy="true"] { cursor: progress; opacity: 0.9; }
   .aviso svg { flex: none; }
   @media (prefers-reduced-motion: reduce) { .aviso { transition: none; } }
 </style>
@@ -208,9 +229,9 @@
     <h1 class="logo"><img src="logo-gomper.webp" width="220" height="217" alt="Gomper · tu charm"></h1>
     <p class="intro">Armá tu llavero en <span class="resalte">3 simples pasos</span></p>
     <ol class="pasos-resumen" aria-label="Pasos">
-      <li><span>1</span>Cordón</li>
-      <li><span>2</span>Nombre</li>
-      <li><span>3</span>Colgantes</li>
+      <li><button class="ir-paso" type="button" data-accion="ir" data-destino="sec-cordon" data-paso="cordon"><span class="n" aria-hidden="true">1</span>Cordón</button></li>
+      <li><button class="ir-paso" type="button" data-accion="ir" data-destino="sec-nombre" data-paso="nombre"><span class="n" aria-hidden="true">2</span>Nombre</button></li>
+      <li><button class="ir-paso" type="button" data-accion="ir" data-destino="sec-colg" data-paso="colg"><span class="n" aria-hidden="true">3</span>Colgantes</button></li>
     </ol>
     <p class="precio-base" id="precio-base" hidden></p>
   </header>
@@ -222,15 +243,17 @@
     <nav class="tabs" id="tabs" aria-label="Llaveros del pedido"></nav>
     <p class="tabs-nota" id="tabs-nota"></p>
 
-    <section class="paso" aria-labelledby="t-cordon">
-      <h2 id="t-cordon"><span class="num">PASO 1</span> Elegí el cordón</h2>
+    <section class="paso" id="sec-cordon" aria-labelledby="t-cordon">
+      <h2 id="t-cordon" tabindex="-1"><span class="num">PASO 1</span> Elegí el cordón</h2>
       <p class="ayuda">Incluye el armado, el mosquetón y los abalorios.</p>
+      <p class="pendiente-msg" id="pend-cordon" hidden></p>
       <div class="cordones" id="cordones"></div>
     </section>
 
-    <section class="paso" aria-labelledby="t-nombre">
-      <h2 id="t-nombre"><span class="num">PASO 2</span> Tu nombre</h2>
-      <p class="ayuda" id="nombre-ayuda">Opcional. Solo letras.</p>
+    <section class="paso" id="sec-nombre" aria-labelledby="t-nombre">
+      <h2 id="t-nombre" tabindex="-1"><span class="num">PASO 2</span> Tu nombre</h2>
+      <p class="ayuda" id="nombre-ayuda">Solo letras.</p>
+      <p class="pendiente-msg" id="pend-nombre" hidden></p>
       <label class="campo" for="nombre">Nombre o palabra</label>
       <input class="input" id="nombre" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="Ej: MIA">
       <div class="contador"><span id="letras-precio"></span><span id="letras-cuenta"></span></div>
@@ -238,9 +261,10 @@
       <p class="error-campo" id="nombre-error" role="alert"></p>
     </section>
 
-    <section class="paso" aria-labelledby="t-colg">
-      <h2 id="t-colg"><span class="num">PASO 3</span> Colgantes</h2>
+    <section class="paso" id="sec-colg" aria-labelledby="t-colg">
+      <h2 id="t-colg" tabindex="-1"><span class="num">PASO 3</span> Colgantes</h2>
       <p class="ayuda" id="colg-ayuda"></p>
+      <p class="pendiente-msg" id="pend-colg" hidden></p>
       <p class="estado-colg" id="colg-estado" aria-live="polite"></p>
       <div class="colgantes" id="colgantes"></div>
     </section>
@@ -298,7 +322,7 @@ const AJUSTES = {
 };
 /* ============================================================ */
 
-const LIMITES_BASE = { maxLlaveros: 2, maxColgantes: 2, maxLetras: 10, stockBajo: 5 };
+const LIMITES_BASE = { maxLlaveros: 5, maxColgantes: 2, minColgantes: 2, nombreObligatorio: true, maxLetras: 10, stockBajo: 5 };
 
 // Datos de ejemplo (mismos que crea setup() en la planilla). Solo se usan en modo demostración.
 const DEMO = (() => {
@@ -322,7 +346,9 @@ const DEMO = (() => {
 const st = {
   items: [], byId: {}, lim: { ...LIMITES_BASE },
   llaveros: [nuevoLlavero()], activo: 0,
-  cargando: true, error: null, demo: false, enviando: false
+  cargando: true, error: null, demo: false, enviando: false,
+  intento: false,   // true después de tocar "Revisar pedido" con algo incompleto
+  revisando: false
 };
 
 function nuevoLlavero() { return { cordon: null, nombre: '', colgantes: {} }; }
@@ -359,13 +385,46 @@ let avisoTimer = null;
 /** " al Llavero 2" solo cuando hay más de un llavero en el pedido. */
 const enLlavero = prep => st.llaveros.length > 1 ? prep + ' Llavero ' + (st.activo + 1) : '';
 /** Muestra un mensaje corto sobre la barra inferior. neutro = acción de quitar (sin tilde verde). */
-function avisar(texto, neutro) {
+const ICONO_ALERTA = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 7.5v5.5M12 16.6v.1"/></svg>';
+/** tipo: nada = éxito (tilde verde), true = acción de quitar (neutro), 'alerta' = falta algo (rosa). */
+function avisar(texto, tipo) {
   const el = $('aviso');
-  el.innerHTML = (neutro ? '' : ICONO_OK) + '<span>' + esc(texto) + '</span>';
-  el.classList.toggle('neutro', !!neutro);
+  const alerta = tipo === 'alerta', neutro = tipo === true;
+  el.innerHTML = (alerta ? ICONO_ALERTA : neutro ? '' : ICONO_OK) + '<span>' + esc(texto) + '</span>';
+  el.classList.toggle('neutro', neutro);
+  el.classList.toggle('alerta', alerta);
   el.classList.add('visible');
   clearTimeout(avisoTimer);
-  avisoTimer = setTimeout(() => el.classList.remove('visible'), 2600);
+  avisoTimer = setTimeout(() => el.classList.remove('visible'), alerta ? 4500 : 2600);
+}
+
+/* ---------- Llavero completo ---------- */
+/** Qué le falta a un llavero: { cordon, nombre, colg } con el texto de cada faltante. */
+function faltantes(l) {
+  const f = {};
+  if (!l.cordon) f.cordon = 'Falta elegir el cordón.';
+  if (st.lim.nombreObligatorio && !letrasDe(l.nombre).length) f.nombre = 'Falta escribir el nombre.';
+  const min = st.lim.minColgantes || 0, k = min - colgantesEn(l);
+  if (k > 0) f.colg = k === 1 ? 'Falta 1 colgante.' : 'Faltan ' + k + ' colgantes.';
+  return f;
+}
+const completo = l => Object.keys(faltantes(l)).length === 0;
+/** "Completá el Llavero 2: falta el cordón, el nombre y 2 colgantes." */
+function textoFaltan(i, f) {
+  const k = (st.lim.minColgantes || 0) - colgantesEn(st.llaveros[i]);
+  const partes = [];
+  if (f.cordon) partes.push('el cordón');
+  if (f.nombre) partes.push('el nombre');
+  if (f.colg) partes.push(k === 1 ? '1 colgante' : k + ' colgantes');
+  const lista = partes.length > 1 ? partes.slice(0, -1).join(', ') + ' y ' + partes[partes.length - 1] : partes[0];
+  return (st.llaveros.length > 1 ? 'Completá el Llavero ' + (i + 1) : 'Completá tu llavero') + ': falta ' + lista + '.';
+}
+/** Lleva la pantalla hasta un paso (Cordón, Nombre o Colgantes). */
+function irA(id) {
+  const sec = $(id);
+  const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  sec.scrollIntoView({ behavior: suave ? 'smooth' : 'auto', block: 'start' });
+  sec.querySelector('h2').focus({ preventScroll: true });
 }
 
 function abrirFoto(id) {
@@ -447,18 +506,35 @@ function render() {
     const min = Math.min(...precios), maxP = Math.max(...precios);
     $('precio-base').hidden = false;
     $('precio-base').innerHTML = '<strong>' + (min === maxP ? '' : 'Desde ') + gs(min) + '</strong>' +
-      '<span>Cordón + nombre + hasta ' + st.lim.maxColgantes + ' colgantes</span>';
+      '<span>Cordón + nombre + ' + (st.lim.minColgantes === st.lim.maxColgantes ? '' : 'hasta ') + st.lim.maxColgantes + ' colgantes</span>';
   }
 
   const m = uso();
   const l = actual();
+
+  // Estado del llavero que se está armando: pasos 1-2-3 con tilde y pasos que faltan marcados
+  const falta = faltantes(l);
+  document.querySelectorAll('.ir-paso').forEach(bt => {
+    const hecho = !falta[bt.dataset.paso];
+    bt.classList.toggle('hecho', hecho);
+    bt.querySelector('.n').textContent = hecho ? '✓' : String(['cordon', 'nombre', 'colg'].indexOf(bt.dataset.paso) + 1);
+  });
+  ['cordon', 'nombre', 'colg'].forEach(k => {
+    const mostrar = st.intento && !!falta[k];
+    $('sec-' + k).classList.toggle('pendiente', mostrar);
+    $('pend-' + k).hidden = !mostrar;
+    $('pend-' + k).innerHTML = mostrar ? ICONO_ALERTA + '<span>' + esc(falta[k]) + '</span>' : '';
+  });
 
   // Pestañas
   let tabs = st.llaveros.map((ll, i) => {
     const activo = i === st.activo;
     const quitar = st.llaveros.length > 1
       ? '<button class="tab-x" type="button" data-accion="quitar" data-i="' + i + '" aria-label="Quitar llavero ' + (i + 1) + '">×</button>' : '';
-    return '<span class="tab' + (activo ? ' activo' : '') + '"><button class="tab-btn" type="button" data-accion="tab" data-i="' + i + '" aria-current="' + (activo ? 'true' : 'false') + '">Llavero ' + (i + 1) + '</button>' + quitar + '</span>';
+    const ok = completo(ll), marcar = !ok && st.intento;
+    const estado = ok ? '<span class="estado-ll ok" aria-hidden="true">✓</span><span class="sr"> (completo)</span>'
+      : marcar ? '<span class="estado-ll falta" aria-hidden="true">!</span><span class="sr"> (incompleto)</span>' : '';
+    return '<span class="tab' + (activo ? ' activo' : '') + (marcar ? ' incompleto' : '') + '"><button class="tab-btn" type="button" data-accion="tab" data-i="' + i + '" aria-current="' + (activo ? 'true' : 'false') + '">Llavero ' + (i + 1) + estado + '</button>' + quitar + '</span>';
   }).join('');
   const lleno = st.llaveros.length >= st.lim.maxLlaveros;
   tabs += '<button class="agregar" type="button" data-accion="agregar"' + (lleno ? ' disabled' : '') + '>+ Agregar otro llavero</button>';
@@ -487,7 +563,7 @@ function render() {
   $('cuentas').style.setProperty('--cc', colorCordon);
   $('cuentas').innerHTML = letras.map(ch =>
     '<span class="cuenta' + (faltan.includes(ch) ? ' falta' : '') + '">' + esc(ch) + '</span>').join('');
-  $('nombre-ayuda').textContent = 'Opcional. Solo letras, hasta ' + st.lim.maxLetras + '.';
+  $('nombre-ayuda').textContent = (st.lim.nombreObligatorio ? '' : 'Opcional. ') + 'Solo letras, hasta ' + st.lim.maxLetras + '.';
   const precioLetras = letras.reduce((a, ch) => a + (st.byId['L-' + ch] ? st.byId['L-' + ch].precio : 0), 0);
   $('letras-precio').textContent = letras.length ? (precioLetras ? '+ ' + gs(precioLetras) : 'Incluido en el precio') : '';
   $('letras-cuenta').textContent = letras.length + ' / ' + st.lim.maxLetras + ' letras';
@@ -499,8 +575,9 @@ function render() {
   // Colgantes
   const enEste = colgantesEn(l);
   const max = st.lim.maxColgantes;
-  $('colg-ayuda').textContent = 'Elegí hasta ' + max + ' colgantes.';
-  $('colg-estado').textContent = enEste >= max ? 'Llegaste al máximo de ' + max + ' colgantes en este llavero.' : 'Elegidos: ' + enEste + ' de ' + max;
+  const minC = st.lim.minColgantes || 0;
+  $('colg-ayuda').textContent = minC === max ? 'Elegí ' + max + ' colgantes.' : 'Elegí hasta ' + max + ' colgantes.';
+  $('colg-estado').textContent = enEste >= max ? '¡Listo! Ya elegiste los ' + max + ' colgantes.' : 'Elegidos: ' + enEste + ' de ' + max;
   $('colg-estado').className = 'estado-colg' + (enEste >= max ? ' lleno' : '');
   $('colgantes').innerHTML = porCategoria('colgante').map((p, i) => {
     const elegido = !!l.colgantes[p.id];
@@ -523,7 +600,9 @@ function render() {
   // Barra
   $('total').textContent = gs(totalPedido());
   const n = st.llaveros.length;
-  $('resumen').textContent = n + (n === 1 ? ' llavero' : ' llaveros') + ' en tu pedido';
+  const pendientes = st.llaveros.filter(x => !completo(x)).length;
+  $('resumen').textContent = n + (n === 1 ? ' llavero' : ' llaveros') +
+    (pendientes === 0 ? ' · ¡listo para revisar!' : n === 1 ? ' · falta completar' : ' · ' + pendientes + ' por completar');
 }
 
 /* ---------- Validación y mensaje ---------- */
@@ -532,7 +611,7 @@ function erroresPedido() {
   const errs = [];
   st.llaveros.forEach((l, i) => {
     const n = 'Llavero ' + (i + 1);
-    if (!l.cordon) errs.push(n + ': falta elegir el cordón.');
+    Object.values(faltantes(l)).forEach(t => errs.push(n + ': ' + t.charAt(0).toLowerCase() + t.slice(1)));
     if (letrasDe(l.nombre).length > st.lim.maxLetras) errs.push(n + ': el nombre supera las ' + st.lim.maxLetras + ' letras.');
     if (colgantesEn(l) > st.lim.maxColgantes) errs.push(n + ': máximo ' + st.lim.maxColgantes + ' colgantes.');
   });
@@ -590,7 +669,8 @@ function renderDialogo(erroresServidor) {
   $('dlg-total').textContent = gs(totalPedido());
   $('dlg-mensaje').textContent = mensajeWhatsApp(null, $('cliente').value.trim());
   $('enviar').disabled = errs.length > 0 || st.enviando;
-  $('enviar').textContent = st.enviando ? 'Enviando…' : 'Enviar pedido por WhatsApp';
+  $('enviar').innerHTML = st.enviando ? '<span class="spinner" aria-hidden="true"></span>Enviando…' : 'Enviar pedido por WhatsApp';
+  $('enviar').setAttribute('aria-busy', st.enviando ? 'true' : 'false');
 }
 
 async function enviar() {
@@ -672,6 +752,7 @@ document.addEventListener('click', ev => {
       if (st.llaveros.length < st.lim.maxLlaveros) {
         st.llaveros.push(nuevoLlavero());
         st.activo = st.llaveros.length - 1;
+        st.intento = false; // el llavero nuevo empieza sin marcas rojas
         $('nombre').value = '';
         avisar('Llavero ' + st.llaveros.length + ' agregado. Elegí su cordón.');
       }
@@ -701,6 +782,9 @@ document.addEventListener('click', ev => {
     case 'reintentar':
       cargar();
       return;
+    case 'ir':
+      irA(b.dataset.destino);
+      return;
     case 'zoom':
       abrirFoto(id);
       return;
@@ -725,15 +809,47 @@ $('nombre').addEventListener('input', e => {
   render();
 });
 
+function marcarRevisando(si) {
+  st.revisando = si;
+  const b = $('revisar');
+  b.disabled = si;
+  b.setAttribute('aria-busy', si ? 'true' : 'false');
+  b.innerHTML = si ? '<span class="spinner" aria-hidden="true"></span>Revisando…' : 'Revisar pedido';
+}
+
 $('revisar').addEventListener('click', async () => {
+  if (st.revisando) return;
   $('fallback').hidden = true;
-  if (AJUSTES.API_URL) await cargar(true); // stock fresco antes de revisar
+  marcarRevisando(true);
+  try {
+    if (AJUSTES.API_URL) await cargar(true); // stock fresco antes de revisar
+    else await new Promise(r => setTimeout(r, 250));
+  } finally {
+    marcarRevisando(false);
+  }
+  // Si a algún llavero le falta algo, lo mostramos en vez de abrir el resumen
+  const i = st.llaveros.findIndex(x => !completo(x));
+  if (i !== -1) {
+    st.intento = true;
+    st.activo = i;
+    $('nombre').value = actual().nombre;
+    render();
+    const f = faltantes(actual());
+    irA(f.cordon ? 'sec-cordon' : f.nombre ? 'sec-nombre' : 'sec-colg');
+    avisar(textoFaltan(i, f), 'alerta');
+    return;
+  }
   renderDialogo();
   $('dlg').showModal();
 });
 $('cliente').addEventListener('input', () => renderDialogo());
 $('enviar').addEventListener('click', enviar);
 $('cerrar').addEventListener('click', () => $('dlg').close());
+
+// El aviso flota siempre justo arriba de la barra inferior, mida lo que mida
+if ('ResizeObserver' in window) {
+  new ResizeObserver(() => document.documentElement.style.setProperty('--alto-barra', $('barra').offsetHeight + 'px')).observe($('barra'));
+}
 
 cargar();
 </script>
