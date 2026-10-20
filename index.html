@@ -732,9 +732,9 @@ function lineasLlavero(l) {
   return out;
 }
 
-function mensajeWhatsApp(numero, cliente) {
+function mensajeWhatsApp(codigo, cliente) {
   const L = ['¡Hola Gomper! Quiero hacer este pedido:'];
-  if (numero) L.push('Pedido N° ' + numero);
+  if (codigo) L.push('Pedido #' + codigo);
   st.llaveros.forEach((l, i) => {
     L.push('', 'Llavero ' + (i + 1));
     lineasLlavero(l).forEach(t => L.push('- ' + t));
@@ -869,7 +869,7 @@ async function enviar() {
   if (erroresPedido().length) { renderDialogo(); return; }
   const cliente = $('cliente').value.trim();
   st.enviando = true; renderDialogo();
-  let numero = null;
+  let codigo = null;
   if (AJUSTES.API_URL) {
     try {
       const r = await fetch(AJUSTES.API_URL, { method: 'POST', body: JSON.stringify(pedidoParaServidor(cliente)) });
@@ -881,19 +881,20 @@ async function enviar() {
         render();
         return;
       }
-      numero = data.numero;
+      // El cliente ve solo el código corto; el N° largo queda en la planilla
+      codigo = data.codigo || null;
     } catch (e) {
       // Sin conexión con la planilla: igual mandamos el pedido por WhatsApp.
-      numero = null;
+      codigo = null;
     }
   } else {
-    numero = 'DEMO-' + Date.now().toString(36).toUpperCase();
+    codigo = 'DEMO';
   }
-  const url = 'https://wa.me/' + AJUSTES.WHATSAPP + '?text=' + encodeURIComponent(mensajeWhatsApp(numero, cliente));
+  const url = 'https://wa.me/' + AJUSTES.WHATSAPP + '?text=' + encodeURIComponent(mensajeWhatsApp(codigo, cliente));
   st.enviando = false;
   renderDialogo();
   $('fallback').hidden = false;
-  $('fallback').innerHTML = 'Si WhatsApp no se abrió solo, <a href="' + esc(url) + '" target="_blank" rel="noopener">tocá acá para enviar el pedido</a>.';
+  $('fallback').innerHTML = (codigo ? 'Tu pedido es el <strong>#' + esc(codigo) + '</strong>. ' : '') + 'Si WhatsApp no se abrió solo, <a href="' + esc(url) + '" target="_blank" rel="noopener">tocá acá para enviar el pedido</a>.';
   window.location.href = url;
 }
 
@@ -1044,6 +1045,18 @@ $('revisar').addEventListener('click', async () => {
   abrirResumen();
 });
 $('cliente').addEventListener('input', () => renderDialogo());
+// Al abrir "Ver el mensaje…" bajamos el resumen para que el mensaje se vea entero (o desde su comienzo)
+document.querySelector('.ver-msg').addEventListener('toggle', ev => {
+  if (!ev.target.open) return;
+  ajustarHoja(); // por si recién se cerró el teclado y la hoja cambió de alto
+  const cuerpo = $('dlg').querySelector('.dlg-cuerpo');
+  const det = ev.target;
+  const desde = det.offsetTop - cuerpo.offsetTop - 8;
+  const hasta = det.offsetTop - cuerpo.offsetTop + det.offsetHeight + 18 - cuerpo.clientHeight;
+  const destino = Math.max(0, Math.min(desde, hasta, cuerpo.scrollHeight - cuerpo.clientHeight));
+  const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (destino > cuerpo.scrollTop) cuerpo.scrollTo({ top: destino, behavior: suave ? 'smooth' : 'auto' });
+});
 // Al tocar el campo se abre el teclado: esperamos a que termine de abrirse y acomodamos la hoja
 $('cliente').addEventListener('focus', () => {
   ajustarHoja();
