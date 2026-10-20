@@ -253,6 +253,12 @@
   .wa:disabled { opacity: 0.55; box-shadow: none; }
   .volver { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; min-height: 46px; font-weight: 800; }
   .nota-wa { margin: 8px 0 0; text-align: center; font-size: 12px; font-weight: 700; color: var(--ink-2); }
+  /* Con el teclado abierto mostramos solo lo justo para que entre el campo del nombre */
+  dialog.hoja.tecleando { border-radius: 20px 20px 0 0; }
+  dialog.hoja.tecleando .agarre, dialog.hoja.tecleando .volver, dialog.hoja.tecleando .nota-wa { display: none; }
+  dialog.hoja.tecleando .dlg-pie { padding-top: 8px; padding-bottom: 8px; }
+  dialog.hoja.tecleando .total-dlg { padding: 6px 12px; margin-bottom: 8px; }
+  dialog.hoja.tecleando .total-dlg #dlg-total { font-size: 22px; }
   .fallback { font-size: 14px; text-align: center; }
   .fallback a { color: var(--ink); font-weight: 800; }
 
@@ -784,14 +790,32 @@ function tarjetaLlavero(l, i) {
 function ajustarHoja() {
   const dlg = $('dlg');
   if (!dlg.open) return;
-  const alto = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-  const ancho = window.visualViewport ? window.visualViewport.width : window.innerWidth;
-  const margen = ancho >= 620 ? 48 : alto * 0.08;
+  const vv = window.visualViewport;
+  const alto = vv ? vv.height : window.innerHeight;
+  const ancho = vv ? vv.width : window.innerWidth;
+  // En el celular el teclado tapa la parte de abajo de la pantalla: subimos la hoja para que quede arriba del teclado
+  const teclado = vv && ancho < 620 ? Math.max(0, Math.round(window.innerHeight - (vv.height + vv.offsetTop))) : 0;
+  const tecleando = teclado > 80;
+  dlg.classList.toggle('tecleando', tecleando);
+  dlg.style.marginBottom = tecleando ? teclado + 'px' : '';
+  const margen = ancho >= 620 ? 48 : tecleando ? 8 : alto * 0.08;
   const pie = dlg.querySelector('.dlg-pie').offsetHeight;
-  dlg.style.setProperty('--alto-cuerpo', Math.max(180, Math.floor(alto - margen - pie)) + 'px');
+  dlg.style.setProperty('--alto-cuerpo', Math.max(tecleando ? 120 : 180, Math.floor(alto - margen - pie)) + 'px');
+  // Si el cliente está escribiendo su nombre, que el campo quede a la vista
+  if (tecleando && document.activeElement === $('cliente')) mostrarCampoCliente();
+}
+/** Lleva el campo "¿A nombre de quién…?" a la vista dentro del resumen. */
+function mostrarCampoCliente() {
+  const cuerpo = $('dlg').querySelector('.dlg-cuerpo');
+  const caja = $('cliente').closest('.cliente-box');
+  const arriba = caja.offsetTop - cuerpo.offsetTop;
+  cuerpo.scrollTop = Math.max(0, arriba - Math.max(8, (cuerpo.clientHeight - caja.offsetHeight) / 2));
 }
 window.addEventListener('resize', ajustarHoja);
-if (window.visualViewport) window.visualViewport.addEventListener('resize', ajustarHoja);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', ajustarHoja);
+  window.visualViewport.addEventListener('scroll', ajustarHoja);
+}
 
 function renderDialogo(erroresServidor) {
   const errs = erroresServidor || erroresPedido();
@@ -991,6 +1015,12 @@ $('revisar').addEventListener('click', async () => {
   $('dlg').querySelector('.dlg-cuerpo').scrollTop = 0;
 });
 $('cliente').addEventListener('input', () => renderDialogo());
+// Al tocar el campo se abre el teclado: esperamos a que termine de abrirse y acomodamos la hoja
+$('cliente').addEventListener('focus', () => {
+  mostrarCampoCliente();
+  [120, 350, 700].forEach(ms => setTimeout(ajustarHoja, ms));
+});
+$('cliente').addEventListener('blur', () => setTimeout(ajustarHoja, 150));
 $('enviar').addEventListener('click', enviar);
 $('cerrar').addEventListener('click', () => $('dlg').close());
 $('cerrar-x').addEventListener('click', () => $('dlg').close());
